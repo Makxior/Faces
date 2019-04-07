@@ -1,8 +1,5 @@
 from tkinter import *
-from tkinter import messagebox, filedialog
-import tkinter as tk
-import matplotlib.pyplot as plt
-import numpy as np
+from tkinter import filedialog
 import tkinter.filedialog
 import os
 import face_recognition
@@ -11,11 +8,13 @@ from PIL import Image, ImageDraw
 master = Tk()  # Create the main window
 
 tekst1 = "Program instruction"
-tekst2 = "Face recognition application is based on face_recognition python libary"
+tekst2 = "Face recognition application is based on face_recognition python libary\n\n" \
+         "Load face file - load the photo with the face you want to search for\n" \
+         "Select folder  - select the folder in which you want to search"
 
 
 def master_setup():
-    master.title("Program do wizualizacji danych")
+    master.title("Faces")
     master.geometry("486x382")
     master.configure(background='#C0D4EE')
     master.resizable(0, 0)
@@ -47,17 +46,16 @@ def loadface():
 
 def choosefolder():
     global folder_path
-    filename = filedialog.askdirectory()
-    folder_path = filename
+    folder_path = filedialog.askdirectory()
 
 
 def showpics():
 
-    for k in range(1, i-1):
+    for filename in os.listdir(folder_path):
 
         Contains = 0
 
-        test_image = face_recognition.load_image_file('%s' % folder_path + '/pic%d.jpg' % k)
+        test_image = face_recognition.load_image_file('%s' % folder_path +"/"+ filename)
 
         # Find faces in test image
         face_locations = face_recognition.face_locations(test_image)
@@ -94,8 +92,8 @@ def showpics():
 def rename():  # rename file to pic"i"
     global i
     i=1
-    j=100
-    for filename in os.listdir('%s' % folder_path):
+    j=1
+    for filename in os.listdir(folder_path):
         dst = "temp" + str(j) + ".jpg"
         src = '%s/' % folder_path + filename
         dst = '%s/' % folder_path + dst
@@ -103,7 +101,7 @@ def rename():  # rename file to pic"i"
         # rename all the files
         os.rename(src, dst)
         j += 1
-    for filename in os.listdir('%s' % folder_path):
+    for filename in os.listdir(folder_path):
         dst = "pic" + str(i) + ".jpg"
         src = '%s/' % folder_path + filename
         dst = '%s/' % folder_path + dst
@@ -124,11 +122,11 @@ def show_menu():
            command=instruction, width=25, height=5, font=20, bg='lightgreen').grid(row=1, column=0)
     Button(master, text='Load face file',
            command=loadface, width=25, height=5, font=20, bg="#ff7777").grid(row=1, column=1)
-    Button(master, text='Choose folder',
+    Button(master, text='Select folder',
            command=choosefolder, width=25, height=5, font=20, bg="#C0D4CC").grid(row=2, column=0)
     Button(master, text='Show images containing face',
            command=showpics, width=25, height=5, font=20, bg="#ffcc44").grid(row=2, column=1, pady=10)
-    Button(master, text='Rename files',
+    Button(master, text='Rename files\n(optional)',
            command=rename, width=25, height=5, font=20, bg="wheat").grid(row=3, column=0)
     Button(master, text='Exit',
            command=wyjscie, width=25, height=5, font=20, bg="lightpink").grid(row=3, column=1)
